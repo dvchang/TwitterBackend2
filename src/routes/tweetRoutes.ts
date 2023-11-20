@@ -1,11 +1,18 @@
 import { Router } from "express";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { User, PrismaClient } from "@prisma/client";
+import jwt from 'jsonwebtoken'
 
 const router = Router();
 const prisma = new PrismaClient();
 
 router.post('/', async (req, res) => {
-    const { content, image, authorId } = req.body;
+    const { content, image } = req.body;
+    // @ts-ignore
+    const user: User = req.user
+    // console.log(token);
+    // res.sendStatus(200);
+
+    const authorId = user.id;
     console.log("post create tweet", content, image, authorId)
 
     try {
