@@ -60,6 +60,7 @@ router.post('/authenticate', async (req, res) => {
     console.log("authentication", email, emailToken);
 
     if (!email || !emailToken) {
+        console.log("no email or email token");
         return res.send(400);
     }
 
@@ -74,6 +75,7 @@ router.post('/authenticate', async (req, res) => {
 
     console.log(dbEmailToken);
     if (!dbEmailToken || !dbEmailToken.valid) {
+        console.log("no dbEmailToken or its invalid");
         return res.sendStatus(401);
     }
     if (dbEmailToken?.user?.email != email) {
