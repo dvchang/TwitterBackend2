@@ -59,6 +59,10 @@ router.post('/authenticate', async (req, res) => {
     const { email, emailToken } = req.body;
     console.log("authentication", email, emailToken);
 
+    if (!email || !emailToken) {
+        return res.send(400);
+    }
+
     const dbEmailToken = await prisma.token.findUnique({
         where: {
             emailToken,
