@@ -10,11 +10,11 @@ type AuthedRequest = Request & { user?: User };
 router.post('/', async (req: AuthedRequest, res) => {
     const { content, image } = req.body;
 
-    if (req.user !== null) {
-        console.log("create tweet error:");
+    if (req.user === null) {
+        console.log("empty auth user");
         return res.sendStatus(400);
     }
-    const user: User = req.user
+    const user: User = req.user!
 
     const authorId = user.id!;
     console.log("post create tweet", content, image, authorId)
@@ -36,11 +36,11 @@ router.post('/', async (req: AuthedRequest, res) => {
 
 router.get('/', async (req: AuthedRequest, res) => {
     const { tweetId } = req.body;
-    if (req.user !== null) {
-        console.log("create tweet error:");
+    if (req.user === null) {
+        console.log("empty auth user");
         return res.sendStatus(400);
     }
-    const user: User = req.user
+    const user: User = req.user!
     if (tweetId != null) {
         const result = await prisma.tweet.findUnique({ where: { id: Number(tweetId) } })
         res.json(result);

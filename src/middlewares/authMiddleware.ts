@@ -48,7 +48,7 @@ export async function authenticationToken(
             return res.sendStatus(401);
         }
         req.user = dbToken.user;
-        console.log("Set user id", req.user?.id);
+        console.log("Auth get valid user id", req.user?.id);
         next();
 
     } catch (e) {
