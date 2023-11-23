@@ -25,9 +25,8 @@ function generateAuthToken(tokenId: number): string {
 // generate the email token and send it to their email
 // Todo remove this creation part.
 router.post('/login', async (req, res) => {
-    const { email } = req.body;
+    const { email, username } = req.body;
     console.log("try to login");
-
 
     const emailToken = generateEmailToken();
     const expiration = new Date(new Date().getTime() + EXPERATION_MINS * 60 * 1000);
@@ -43,7 +42,7 @@ router.post('/login', async (req, res) => {
                     },
                     create: {
                         email,
-                        username: emailToken
+                        username: username
                     }
                 }
             }
