@@ -46,7 +46,15 @@ router.get('/', async (req: AuthedRequest, res) => {
         res.json(result);
     } else if (user != null) {
         const result = await prisma.tweet.findMany({ where: { authorId: user.id } })
-        res.json(result);
+        const resultWithUtcDates = result.map(tweet => {
+            return {
+                ...tweet,
+                createdAt: tweet.createdAt.getTime(), // Assuming 'createdAt' is the date property
+                updatedAt: tweet.updatedAt.getTime(), // Assuming 'updatedAt' is the date property
+                // Add more date properties if needed
+            };
+        });
+        res.json(resultWithUtcDates);
     } else {
         res.status(400).json({ error: "Error getting tweet" });
     }
