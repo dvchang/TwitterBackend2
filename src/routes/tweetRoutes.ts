@@ -1,18 +1,22 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { User, PrismaClient } from "@prisma/client";
 import jwt from 'jsonwebtoken'
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post('/', async (req, res) => {
-    const { content, image } = req.body;
-    // @ts-ignore
-    const user: User = req.user
-    // console.log(token);
-    // res.sendStatus(200);
+type AuthedRequest = Request & { user?: User };
 
-    const authorId = user.id;
+router.post('/', async (req: AuthedRequest, res) => {
+    const { content, image } = req.body;
+
+    if (req.user !== null) {
+        console.log("create tweet error:");
+        return res.sendStatus(400);
+    }
+    const user: User = req.user
+
+    const authorId = user.id!;
     console.log("post create tweet", content, image, authorId)
 
     try {
@@ -30,13 +34,18 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
-    const { tweetId, userId } = req.body;
+router.get('/', async (req: AuthedRequest, res) => {
+    const { tweetId } = req.body;
+    if (req.user !== null) {
+        console.log("create tweet error:");
+        return res.sendStatus(400);
+    }
+    const user: User = req.user
     if (tweetId != null) {
         const result = await prisma.tweet.findUnique({ where: { id: Number(tweetId) } })
         res.json(result);
-    } else if (userId != null) {
-        const result = await prisma.tweet.findMany({ where: { authorId: Number(userId) } })
+    } else if (user != null) {
+        const result = await prisma.tweet.findMany({ where: { authorId: user.id } })
         res.json(result);
     } else {
         res.status(400).json({ error: "Error getting tweet" });
