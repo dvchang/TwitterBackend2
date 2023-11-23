@@ -111,7 +111,7 @@ router.post('/authenticate', async (req, res) => {
 
     const authToken = generateAuthToken(apiToken.id);
 
-
+    console.log("authtoken good", authToken)
     res.json({ authToken: authToken });
 
 })
